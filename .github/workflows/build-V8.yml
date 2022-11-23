@@ -1,4 +1,4 @@
-name: Build and deploy V8 UAT
+name: Build and deploy V8
 
 on:
   workflow_call:
