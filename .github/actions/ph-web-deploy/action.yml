@@ -1,0 +1,62 @@
+name: "Ph Web Deploy"
+description: "Deploy projects directly to IIS"
+inputs:
+  website-name:
+    description: "IIS website name"
+    required: true
+  server-computer-name:
+    description: "IIS server computer name"
+    required: true
+  server-username:
+    description: "IIS server username"
+    required: true
+  server-password:
+    description: "IIS server password"
+    required: true
+  source-path:
+    description: "The source directory for payload"
+    required: false
+    default: '_build'
+  source-paramFile:
+    description: "The location of the SetParameters.xml file"
+    required: true
+    default: '""'
+  source-fileName:
+    description: "The name of the file to be deployed"
+    required: true
+    default: 'Umbraco.Web.zip'
+runs:
+  using: "composite"
+  steps:
+    - name: Stop Application Pool
+      shell: pwsh
+      run: >
+        ${{ github.action_path }}/Scripts/Set-ApplicationPool.ps1
+        -recycleMode StopAppPool
+        -recycleApp ${{ inputs.website-name }}
+        -computerName ${{ inputs.server-computer-name }}
+        -username ${{ inputs.server-username }}
+        -password ${{ inputs.server-password }}
+    - name: Deploy Application
+      shell: pwsh
+      run: >
+        ${{ github.action_path }}/Scripts/Deploy-ApplicationPackage.ps1
+        -source ${{ inputs.source-path }}
+        -recycleApp ${{ inputs.website-name }}
+        -computerName ${{ inputs.server-computer-name }}
+        -username ${{ inputs.server-username }}
+        -password ${{ inputs.server-password }}
+        -paramFile ${{ inputs.source-paramFile }}
+        -fileName ${{ inputs.source-fileName }}
+    - name: Start Application Pool
+      shell: pwsh
+      run: >
+        ${{ github.action_path }}/Scripts/Set-ApplicationPool.ps1
+        -recycleMode StartAppPool
+        -recycleApp ${{ inputs.website-name }}
+        -computerName ${{ inputs.server-computer-name }}
+        -username ${{ inputs.server-username }}
+        -password ${{ inputs.server-password }}
+branding:
+  icon: "upload-cloud"
+  color: "purple"
