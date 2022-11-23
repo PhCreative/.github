@@ -24,7 +24,7 @@ env:
     BuildConfiguration: UAT
 
 jobs:
-  build:
+  run-forest-run:
   
     runs-on: self-hosted
     
@@ -62,11 +62,6 @@ jobs:
           env:
             ClientDependencyVersion: ${{ inputs.run_number }}
             
-  
-  deploy:
-    runs-on: self-hosted
-    
-    steps:
         - name: Deploy to Server
           uses: ./.github/actions/ph-web-deploy
           with:
@@ -82,10 +77,6 @@ jobs:
           with:
             repo-token: ${{ secrets.GITHUB_TOKEN }}
             tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ github.run_number }}
-  
-  cleanup:
-      runs-on: self-hosted
-    
-      steps:
+        
         - name: Clean up after run
           uses: mickem/clean-after-action@v2
