@@ -1,0 +1,91 @@
+name: Build and deploy V8 UAT
+
+on:
+  workflow_call:
+    inputs:
+      run_number:
+        required: true
+        type: string
+    secrets:
+      solution_name:
+        required: true
+      website_name:
+        required: true
+      server_name:
+        required: true
+      username:
+        required: true
+      password:
+        required: true
+
+env:
+    SolutionName: ${{ secrets.solution_name }}
+    BuildPlatform: Any CPU
+    BuildConfiguration: UAT
+
+jobs:
+  build:
+  
+    runs-on: self-hosted
+    
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Get current date
+          id: date
+          uses: ./.github/actions/github-action-current-date-time
+          with:
+            format: "YYYY_MM_DD HH_mm_ss_SSS"
+
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1
+          
+        - name: Setup NuGet
+          uses: NuGet/setup-nuget@v1.1.1
+          with:
+            nuget-version: 5.5.0
+
+        - name: Create Build Directory
+          run: mkdir _build
+
+        - name: Restore Packages
+          run: nuget restore ${{env.SolutionName}}
+      
+        - name: Build Solution
+          run: | 
+            msbuild.exe ${{env.SolutionName}} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeleteExistingFiles=True /p:SkipInvalidConfigurations=true /p:IncludeSetAclProviderOnDestination=False /p:AutoParameterizationWebConfigConnectionStrings=False /p:platform="${{env.BuildPlatform}}" /p:configuration="${{env.BuildConfiguration}}" /p:PackageLocation="../_build"    
+        
+        - uses: cschleiden/replace-tokens@v1
+          with:
+            files: '["_build/Umbraco.Web.SetParameters.xml"]'
+          env:
+            ClientDependencyVersion: ${{ inputs.run_number }}
+            
+  
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+        - name: Deploy to Server
+          uses: ./.github/actions/ph-web-deploy
+          with:
+            website-name: ${{ secrets.website_name }}
+            server-computer-name: ${{ secrets.server_name }}
+            server-username: ${{ secrets.username }}
+            server-password: ${{ secrets.password }}
+            source-path: '_build'
+            source-paramFile: 'Umbraco.Web.SetParameters.xml'
+            
+        - name: Tag Build
+          uses: ./.github/actions/github-tagger
+          with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ github.run_number }}
+  
+  cleanup:
+      runs-on: self-hosted
+    
+      steps:
+        - name: Clean up after run
+          uses: mickem/clean-after-action@v2
