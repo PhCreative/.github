@@ -34,7 +34,7 @@ jobs:
 
         - name: Get current date
           id: date
-          uses: ./.github/actions/github-action-current-date-time
+          uses: Kaven-Universe/github-action-current-date-time@v1.2.0
           with:
             format: "YYYY_MM_DD HH_mm_ss_SSS"
 
@@ -63,7 +63,7 @@ jobs:
             ClientDependencyVersion: ${{ inputs.run_number }}
             
         - name: Deploy to Server
-          uses: ./.github/actions/ph-web-deploy
+          uses: PhCreative/.github/.github/actions/ph-web-deploy@master
           with:
             website-name: ${{ secrets.website_name }}
             server-computer-name: ${{ secrets.server_name }}
@@ -73,10 +73,10 @@ jobs:
             source-paramFile: 'Umbraco.Web.SetParameters.xml'
             
         - name: Tag Build
-          uses: ./.github/actions/github-tagger
+          uses: tvdias/github-tagger@v0.0.2
           with:
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ github.run_number }}
+            tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
         
         - name: Clean up after run
           uses: mickem/clean-after-action@v2
