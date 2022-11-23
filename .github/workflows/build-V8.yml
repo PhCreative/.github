@@ -6,6 +6,12 @@ on:
       run_number:
         required: true
         type: string
+      build_platform:
+        required: true
+        type: string
+      build_configuration:
+        required: true
+        type: string
     secrets:
       solution_name:
         required: true
@@ -20,8 +26,8 @@ on:
 
 env:
     SolutionName: ${{ secrets.solution_name }}
-    BuildPlatform: Any CPU
-    BuildConfiguration: UAT
+    BuildPlatform: ${{ inputs.build_platform }}
+    BuildConfiguration: ${{ inputs.build_configuration }}
 
 jobs:
   run-forest-run:
