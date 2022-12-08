@@ -69,7 +69,7 @@ jobs:
             ClientDependencyVersion: ${{ inputs.run_number }}
             
         - name: Deploy to Server
-          uses: PhCreative/.github/.github/actions/ph-web-deploy@master
+          uses: PhCreative/.github/.github/actions/ph-web-deploy-stop-start-apppool@master
           with:
             website-name: ${{ secrets.website_name }}
             server-computer-name: ${{ secrets.server_name }}
