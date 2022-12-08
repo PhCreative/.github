@@ -1,0 +1,88 @@
+name: Build and deploy V8 (With Stop / Start Application Pool)
+
+on:
+  workflow_call:
+    inputs:
+      run_number:
+        required: true
+        type: string
+      build_platform:
+        required: true
+        type: string
+      build_configuration:
+        required: true
+        type: string
+    secrets:
+      solution_name:
+        required: true
+      website_name:
+        required: true
+      server_name:
+        required: true
+      username:
+        required: true
+      password:
+        required: true
+
+env:
+    SolutionName: ${{ secrets.solution_name }}
+    BuildPlatform: ${{ inputs.build_platform }}
+    BuildConfiguration: ${{ inputs.build_configuration }}
+
+jobs:
+  run-forest-run:
+  
+    runs-on: self-hosted
+    
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Get current date
+          id: date
+          uses: Kaven-Universe/github-action-current-date-time@v1.2.0
+          with:
+            format: "YYYY_MM_DD HH_mm_ss_SSS"
+
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1
+          
+        - name: Setup NuGet
+          uses: NuGet/setup-nuget@v1.1.1
+          with:
+            nuget-version: 5.5.0
+
+        - name: Create Build Directory
+          run: mkdir _build
+
+        - name: Restore Packages
+          run: nuget restore ${{env.SolutionName}}
+      
+        - name: Build Solution
+          run: | 
+            msbuild.exe ${{env.SolutionName}} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeleteExistingFiles=True /p:SkipInvalidConfigurations=true /p:IncludeSetAclProviderOnDestination=False /p:AutoParameterizationWebConfigConnectionStrings=False /p:platform="${{env.BuildPlatform}}" /p:configuration="${{env.BuildConfiguration}}" /p:PackageLocation="../_build"    
+        
+        - uses: cschleiden/replace-tokens@v1
+          with:
+            files: '["_build/Umbraco.Web.SetParameters.xml"]'
+          env:
+            ClientDependencyVersion: ${{ inputs.run_number }}
+            
+        - name: Deploy to Server
+          uses: PhCreative/.github/.github/actions/ph-web-deploy@master
+          with:
+            website-name: ${{ secrets.website_name }}
+            server-computer-name: ${{ secrets.server_name }}
+            server-username: ${{ secrets.username }}
+            server-password: ${{ secrets.password }}
+            source-path: '_build'
+            source-paramFile: 'Umbraco.Web.SetParameters.xml'
+            
+        - name: Tag Build
+          uses: tvdias/github-tagger@v0.0.2
+          with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
+        
+        - name: Clean up after run
+          uses: mickem/clean-after-action@v2
