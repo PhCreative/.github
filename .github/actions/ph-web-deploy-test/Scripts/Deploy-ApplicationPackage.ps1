@@ -16,6 +16,7 @@ param
  $directory = Split-Path -Path (Get-Location) -Parent
  $baseName = (Get-Item $directory).BaseName
  $contentPath = Join-Path(Join-Path $directory $baseName) $source
+ $contentroot = Join-Path(Join-Path $directory $baseName)
 
  $remoteArguments = "computerName='${computerNameArgument}',userName='${username}',password='${password}',authType='Basic',"
 
@@ -24,7 +25,6 @@ param
  "-source:package=${contentPath}\${fileName}",
  "-dest:auto,$($remoteArguments)includeAcls='False'",
  "-allowUntrusted",
- "-enableRule:AppOffline",
  "-setParam:'IIS Web Application Name'='${recycleApp}'",
  "-enableRule:DoNotDeleteRule"
 
@@ -32,4 +32,31 @@ param
     $arguments += "-setParamFile:${contentPath}\${paramFile}"
  }
  
+  [string[]] $appOfflineArguments = 
+ "-verb:sync",
+ "-source:contentPath=$contentroot\app_offline.template.htm",
+ "-dest:contentPath=$recycleApp\App_offline.htm",
+ "-allowUntrusted",
+ "-enableRule:DoNotDeleteRule"
+ 
+   [string[]] $appOfflineDeleteArguments = 
+ "-verb:delete",
+ "-dest:contentPath=$recycleApp\App_offline.htm",
+ "-allowUntrusted"
+ 
+ $deployAppOfflineCommand = """$msdeploy"" $appOfflineArguments"
+ Write-Host $deployAppOfflineCommand
+ $appOfflineResult = cmd.exe /c "$deployAppOfflineCommand"
+ Write-Host $appOfflineResult
+ 
   $fullCommand = """$msdeploy"" $arguments"
+ Write-Host $fullCommand
+ 
+ $result = cmd.exe /c "$fullCommand"
+ 
+ Write-Host $result
+ 
+  $deleteAppOfflineCommand = """$msdeploy"" $appOfflineDeleteArguments"
+ Write-Host $deleteAppOfflineCommand
+ $deleteAppOfflineResult = cmd.exe /c "$deleteAppOfflineCommand"
+ Write-Host $deleteAppOfflineResult
