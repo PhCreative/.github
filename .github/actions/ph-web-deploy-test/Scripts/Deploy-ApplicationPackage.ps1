@@ -16,7 +16,7 @@ param
  
  $directory = Split-Path -Path (Get-Location) -Parent
  $baseName = (Get-Item $directory).BaseName
- $contentPath = Join-Path(Join-Path $directory $baseName) $source "\bin\${$configuration}\net6.0\"
+ $contentPath = Join-Path(Join-Path $directory $baseName) $source '\bin\'${$configuration}'\net6.0\'
 
  $remoteArguments = "computerName='${computerNameArgument}',userName='${username}',password='${password}',authType='Basic',"
 
