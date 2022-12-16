@@ -34,8 +34,8 @@ param
  
   [string[]] $appOfflineArguments = 
  "-verb:sync",
- "-source:contentPath=$contentroot\app_offline.template.htm",
- "-dest:contentPath=$recycleApp\App_offline.htm",
+ "-source:contentPath=$contentroot\app_offline.htm",
+ "-dest:contentPath=$recycleApp",
  "-allowUntrusted",
  "-enableRule:DoNotDeleteRule"
  
