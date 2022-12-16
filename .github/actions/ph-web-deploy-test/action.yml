@@ -28,6 +28,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Take Application Offline
+      shell: pwsh
+      run: >
+        ${{ github.action_path }}/Scripts/TakeApplicationOffline.ps1
+        -recycleMode StartAppPool
+        -recycleApp ${{ inputs.website-name }}
+        -computerName ${{ inputs.server-computer-name }}
+        -username ${{ inputs.server-username }}
+        -password ${{ inputs.server-password }}
     - name: Deploy Application
       shell: pwsh
       run: >
