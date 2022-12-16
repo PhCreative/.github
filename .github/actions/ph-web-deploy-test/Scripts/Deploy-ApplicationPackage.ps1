@@ -26,7 +26,6 @@ param
  "-dest:iisApp=$recycleApp,$($remoteArguments)includeAcls='False',appOfflineTemplate='app_offline.template.htm'",
  "-allowUntrusted",
  "-enableRule:AppOffline",
- "-setParam:'IIS Web Application Name'='${recycleApp}'",
  "-enableRule:DoNotDeleteRule"
 
  if ($paramFile){
