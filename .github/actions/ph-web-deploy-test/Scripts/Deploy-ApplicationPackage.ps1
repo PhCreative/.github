@@ -16,7 +16,7 @@ param
  $directory = Split-Path -Path (Get-Location) -Parent
  $baseName = (Get-Item $directory).BaseName
  $contentPath = Join-Path(Join-Path $directory $baseName) $source
- $contentroot = Join-Path(Join-Path $directory $baseName)
+ $contentroot = $directory + $baseName
 
  $remoteArguments = "computerName='${computerNameArgument}',userName='${username}',password='${password}',authType='Basic',"
 
