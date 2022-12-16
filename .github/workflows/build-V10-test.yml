@@ -58,7 +58,7 @@ jobs:
             server-computer-name: ${{ secrets.server_name }}
             server-username: ${{ secrets.username }}
             server-password: ${{ secrets.password }}
-            source-path: 'Ph.Umbraco.Web'
+            source-path: '_build'
             source-fileName: 'Ph.Umbraco.Web.zip'
             
         - name: Tag Build
