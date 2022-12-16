@@ -23,7 +23,7 @@ param
  [string[]] $arguments = 
  "-verb:sync",
  "-source:contentPath=${contentPath}",
- "-dest:iisApp=$recycleApp,$($remoteArguments)includeAcls='False',appOfflineTemplate='app_offline.template.htm'",
+ "-dest:contentPath=$recycleApp,$($remoteArguments)includeAcls='False',appOfflineTemplate='app_offline.template.htm'",
  "-allowUntrusted",
  "-enableRule:AppOffline",
  "-enableRule:DoNotDeleteRule"
