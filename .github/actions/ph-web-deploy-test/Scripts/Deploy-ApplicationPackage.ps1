@@ -35,13 +35,13 @@ param
   [string[]] $appOfflineArguments = 
  "-verb:sync",
  "-source:contentPath=$contentroot\app_offline.htm",
- "-dest:contentPath=$recycleApp",
+ "-dest:contentPath=$recycleApp,$($remoteArguments)includeAcls='False'",
  "-allowUntrusted",
  "-enableRule:DoNotDeleteRule"
  
    [string[]] $appOfflineDeleteArguments = 
  "-verb:delete",
- "-dest:contentPath=$recycleApp\App_offline.htm",
+ "-dest:contentPath=$recycleApp\App_offline.htm,$($remoteArguments)includeAcls='False'",
  "-allowUntrusted"
  
  $deployAppOfflineCommand = """$msdeploy"" $appOfflineArguments"
