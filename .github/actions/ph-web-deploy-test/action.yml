@@ -32,7 +32,6 @@ runs:
       shell: pwsh
       run: >
         ${{ github.action_path }}/Scripts/TakeApplicationOffline.ps1
-        -recycleMode StartAppPool
         -recycleApp ${{ inputs.website-name }}
         -computerName ${{ inputs.server-computer-name }}
         -username ${{ inputs.server-username }}
@@ -48,6 +47,14 @@ runs:
         -password ${{ inputs.server-password }}
         -paramFile ${{ inputs.source-paramFile }}
         -fileName ${{ inputs.source-fileName }}
+    - name: Bring Application Online
+      shell: pwsh
+      run: >
+        ${{ github.action_path }}/Scripts/BringApplicationOnline.ps1
+        -recycleApp ${{ inputs.website-name }}
+        -computerName ${{ inputs.server-computer-name }}
+        -username ${{ inputs.server-username }}
+        -password ${{ inputs.server-password }}
 branding:
   icon: "upload-cloud"
   color: "purple"
