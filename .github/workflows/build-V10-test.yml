@@ -57,7 +57,7 @@ jobs:
             server-password: ${{ secrets.password }}
             source-path: 'Ph.Umbraco.Web'
             source-fileName: 'Ph.Umbraco.Web.zip'
-            source-configuration: '${{env.BuildConfiguration}}'
+            source-configuration: '${{ inputs.build_configuration }}'
             
         - name: Tag Build
           uses: tvdias/github-tagger@v0.0.2
