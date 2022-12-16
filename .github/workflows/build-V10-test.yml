@@ -62,7 +62,7 @@ jobs:
             source-fileName: 'Ph.Umbraco.Web.zip'
             
         - name: Tag Build
-          uses: tvdias/github-tagger@v0.0.2
+          uses: PhCreative/.github/.github/actions/github-tagger@master
           with:
             repo-token: ${{ secrets.GITHUB_TOKEN }}
             tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
