@@ -16,7 +16,7 @@ param
  $directory = Split-Path -Path (Get-Location) -Parent
  $baseName = (Get-Item $directory).BaseName
  $contentPath = Join-Path(Join-Path $directory $baseName) $source
- $contentroot = $directory + $baseName
+ $contentroot = $directory + '\' + $baseName
 
  $remoteArguments = "computerName='${computerNameArgument}',userName='${username}',password='${password}',authType='Basic',"
 
@@ -34,7 +34,7 @@ param
  
   [string[]] $appOfflineArguments = 
  "-verb:sync",
- "-source:contentPath=\$contentroot\app_offline.template.htm",
+ "-source:contentPath=$contentroot\app_offline.template.htm",
  "-dest:contentPath=$recycleApp\App_offline.htm",
  "-allowUntrusted",
  "-enableRule:DoNotDeleteRule"
