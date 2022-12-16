@@ -25,6 +25,10 @@ inputs:
     description: "The name of the file to be deployed"
     required: true
     default: 'Umbraco.Web.zip'
+  source-configuration:
+    description: "The build configuration"
+    required: true
+    default: '""'
 runs:
   using: "composite"
   steps:
