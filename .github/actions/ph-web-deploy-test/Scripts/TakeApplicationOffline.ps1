@@ -22,7 +22,7 @@ param
   [string[]] $appOfflineArguments = 
  "-verb:sync",
  "-source:contentPath=$contentroot\app_offline.htm",
- "-dest:contentPath=$recycleApp,$($remoteArguments)includeAcls='False'",
+ "-dest:contentPath=$recycleApp\app_offline.htm,$($remoteArguments)includeAcls='False'",
  "-allowUntrusted",
  "-enableRule:DoNotDeleteRule"
  
