@@ -12,6 +12,9 @@ on:
       build_configuration:
         required: true
         type: string
+      environment_name:
+        required: true
+        type: string
     secrets:
       solution_name:
         required: true
