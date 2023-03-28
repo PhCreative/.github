@@ -82,7 +82,7 @@ jobs:
           uses: PhCreative/.github/.github/actions/github-tagger@master
           with:
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            tag: UATBuild-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
+            tag: ${{env.BuildConfiguration}}Build-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
         
         - name: Clean up after run
           uses: mickem/clean-after-action@v2
