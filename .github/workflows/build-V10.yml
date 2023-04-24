@@ -51,7 +51,8 @@ jobs:
         - name: Create Build Directory
           run: mkdir _build
       
-        - uses: microsoft/variable-substitution@v1 
+        - name: Replace variables
+          uses: microsoft/variable-substitution@v1 
           with:
             files: 'Ph.Umbraco.Web/appsettings.Production.json'
           env:
