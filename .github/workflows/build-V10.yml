@@ -56,7 +56,7 @@ jobs:
           with:
             files: 'Ph.Umbraco.Web/appsettings.Production.json'
           env:
-            Umbraco.CMS.RuntimeMinification.Version: ${{ inputs.run_id }}
+            Umbraco.CMS.RuntimeMinification.Version: ${{ github.run_id }}
       
         - name: Build Solution
           run: | 
