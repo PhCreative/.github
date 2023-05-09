@@ -32,7 +32,7 @@ env:
 jobs:
   run-forest-run:
   
-    runs-on: windows-latest
+    runs-on: self-hosted
     
     steps:
         - name: Checkout
