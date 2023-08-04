@@ -70,3 +70,22 @@ jobs:
             AZURE_TENANT_ID: 'test'
             AZURE_TENANT_ID.value: 'test1'
             aspNetCore.environmentVariables.environmentVariable.AZURE_TENANT_ID: 'test2'
+
+        - name: Deploy to Server
+          uses: PhCreative/.github/.github/actions/ph-web-deploy-v10@master
+          with:
+            website-name: ${{ secrets.website_name }}
+            server-computer-name: ${{ secrets.server_name }}
+            server-username: ${{ secrets.username }}
+            server-password: ${{ secrets.password }}
+            source-path: '_build'
+            source-fileName: 'Ph.Umbraco.Web.zip'
+            
+        - name: Tag Build
+          uses: PhCreative/.github/.github/actions/github-tagger@master
+          with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{env.EnvironmentName}}Build-${{ steps.date.outputs.year }}${{ steps.date.outputs.month }}${{ steps.date.outputs.day }}-${{ inputs.run_number }}
+        
+        - name: Clean up after run
+          uses: mickem/clean-after-action@v2
