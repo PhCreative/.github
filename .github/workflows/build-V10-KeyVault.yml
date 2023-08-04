@@ -60,16 +60,13 @@ jobs:
       
         - name: Build Solution
           run: | 
-            dotnet build ${{env.SolutionName}} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeleteExistingFiles=True /p:SkipInvalidConfigurations=true /p:IncludeSetAclProviderOnDestination=False /p:AutoParameterizationWebConfigConnectionStrings=False /p:platform="${{env.BuildPlatform}}" /p:configuration="${{env.BuildConfiguration}}" /p:PackageLocation="../_build" /p:EnvironmentName=${{env.EnvironmentName}} --no-self-contained -p:MyRuntimeIdentifier=win-x64
-        
-        - name: Replace web config variables
-          uses: microsoft/variable-substitution@v1 
+            dotnet build ${{env.SolutionName}} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeleteExistingFiles=True /p:SkipInvalidConfigurations=true /p:IncludeSetAclProviderOnDestination=False /p:AutoParameterizationWebConfigConnectionStrings=False /p:platform="${{env.BuildPlatform}}" /p:configuration="${{env.BuildConfiguration}}" /p:PackageLocation="../_build" /p:EnvironmentName=${{env.EnvironmentName}} --no-self-contained -p:MyRuntimeIdentifier=win-x64        
+
+        - uses: cschleiden/replace-tokens@v1
           with:
-            files: '_build/Ph.Umbraco.Web/web.config'
+            files: '["_build/Umbraco.Web.SetParameters.xml"]'
           env:
             AZURE_TENANT_ID: 'test'
-            AZURE_TENANT_ID.value: 'test1'
-            aspNetCore.environmentVariables.environmentVariable.AZURE_TENANT_ID: 'test2'
 
         - name: Deploy to Server
           uses: PhCreative/.github/.github/actions/ph-web-deploy-v10@master
