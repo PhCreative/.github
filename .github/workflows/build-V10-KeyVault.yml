@@ -58,11 +58,14 @@ jobs:
           env:
             Umbraco.CMS.RuntimeMinification.Version: ${{ github.run_id }}
       
-        - uses: cschleiden/replace-tokens@v1
+        - name: Replace Key Vault
+          uses: cschleiden/replace-tokens@v1
           with:
             files: '["Ph.Umbraco.Web/web.config"]'
           env:
-            UpdateAzureTenantId: 'test'
+            UpdateAzureTenantId: 'TENANTID'
+            UpdateAzureClientId: 'CLIENTID'
+            UpdateAzureClientSecret: 'SECRET'
 
         - name: Build Solution
           run: | 
