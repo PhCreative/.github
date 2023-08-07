@@ -63,9 +63,9 @@ jobs:
           with:
             files: '["Ph.Umbraco.Web/web.config"]'
           env:
-            UpdateAzureTenantId: 'TENANTID'
-            UpdateAzureClientId: 'CLIENTID'
-            UpdateAzureClientSecret: 'SECRET'
+            UpdateAzureTenantId: ${{ secrets.KeyVaultTenantId }}
+            UpdateAzureClientId: ${{ secrets.KeyVaultClientId }}
+            UpdateAzureClientSecret: ${{ secrets.KeyVaultClientSecret }}
 
         - name: Build Solution
           run: | 
