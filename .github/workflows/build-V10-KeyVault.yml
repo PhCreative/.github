@@ -60,7 +60,7 @@ jobs:
       
         - uses: cschleiden/replace-tokens@v1
           with:
-            files: '["Ph.Umbraco.Web/web.config.config"]'
+            files: '["Ph.Umbraco.Web/web.config"]'
           env:
             UpdateAzureTenantId: 'test'
 
