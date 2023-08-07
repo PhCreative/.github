@@ -58,15 +58,15 @@ jobs:
           env:
             Umbraco.CMS.RuntimeMinification.Version: ${{ github.run_id }}
       
+        - uses: cschleiden/replace-tokens@v1
+          with:
+            files: '["Ph.Umbraco.Web/web.config.xml"]'
+          env:
+            UpdateAzureTenantId: 'test'
+
         - name: Build Solution
           run: | 
             dotnet build ${{env.SolutionName}} /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:DeleteExistingFiles=True /p:SkipInvalidConfigurations=true /p:IncludeSetAclProviderOnDestination=False /p:AutoParameterizationWebConfigConnectionStrings=False /p:platform="${{env.BuildPlatform}}" /p:configuration="${{env.BuildConfiguration}}" /p:PackageLocation="../_build" /p:EnvironmentName=${{env.EnvironmentName}} --no-self-contained -p:MyRuntimeIdentifier=win-x64        
-
-        - uses: cschleiden/replace-tokens@v1
-          with:
-            files: '["_build/Ph.Umbraco.Web.SetParameters.xml"]'
-          env:
-            UpdateAzureTenantId: 'test'
 
         - name: Deploy to Server
           uses: PhCreative/.github/.github/actions/ph-web-deploy-v10@master
