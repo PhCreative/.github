@@ -26,6 +26,12 @@ on:
         required: true
       password:
         required: true
+      keyvaulttenantid:
+        required: true
+      keyvaultclientid:
+        required: true
+      keyvaultclientsecret:
+        required: true
 
 env:
     SolutionName: ${{ secrets.solution_name }}
@@ -63,9 +69,9 @@ jobs:
           with:
             files: '["Ph.Umbraco.Web/web.config"]'
           env:
-            UpdateAzureTenantId: ${{ secrets.KeyVaultTenantId }}
-            UpdateAzureClientId: ${{ secrets.KeyVaultClientId }}
-            UpdateAzureClientSecret: ${{ secrets.KeyVaultClientSecret }}
+            UpdateAzureTenantId: ${{ secrets.keyvaulttenantid }}
+            UpdateAzureClientId: ${{ secrets.keyvaultclientid }}
+            UpdateAzureClientSecret: ${{ secrets.keyvaultclientsecret }}
 
         - name: Build Solution
           run: | 
